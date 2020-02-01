@@ -1,22 +1,25 @@
 #!/bin/bash
+
+motd(){
  
-INTERFACE=$(nmcli | head -n 1 | xargs | cut -d " " -f 1 | tr -d ":")
-PROCCOUNT=`ps -Afl | wc -l`
-PROCCOUNT=`expr $PROCCOUNT - 5`
-GROUPZ=`groups`
-USER=`whoami`
-ADMINS=`cat /etc/group | grep --regex "^sudo" | awk -F: '{print $4}' | tr ',' '|'`
-ADMINSLIST=`grep -E $ADMINS /etc/passwd | tr ':' ' ' | tr ',' ' ' | awk {'print $5,$6,"("$1")"'} | tr '\n' ',' | sed '$s/.$//'`
+local INTERFACE=$(nmcli | head -n 1 | xargs | cut -d " " -f 1 | tr -d ":")
+local PROCCOUNT=`ps -Afl | wc -l`
+local PROCCOUNT=`expr $PROCCOUNT - 5`
+local GROUPZ=`groups`
+local USER=`whoami`
+local ADMINS=`cat /etc/group | grep --regex "^sudo" | awk -F: '{print $4}' | tr ',' '|'`
+local ADMINSLIST=`grep -E $ADMINS /etc/passwd | tr ':' ' ' | tr ',' ' ' | awk {'print $5,$6,"("$1")"'} | tr '\n' ',' | sed '$s/.$//'`
  
 if [[ $GROUPZ == "$USER sudo" ]]; then
-USERGROUP="Administrator"
+    local USERGROUP="Administrator"
 elif [[ $USER = "root" ]]; then
-USERGROUP="Root"
+    local USERGROUP="Root"
 elif [[ $USER = "$USER" ]]; then
-USERGROUP="Regular User"
+    local USERGROUP="Regular User"
 else
-USERGROUP="$GROUPZ"
+    local USERGROUP="$GROUPZ"
 fi
+
 echo -e "
 \e[0m  ...............                        \033[1;31m╔═══════════════════════════════════════════[\033[1;37mSystem Data\033[1;31m]═════════════════════════════════════╗\e[0m
 \e[0m    ....       ....                       \033[1;37m     Hostname\033[1;31m: \033[1;37m`hostname`
@@ -40,3 +43,6 @@ echo -e "
 \e[0m           ...........      ...........
 \e[0m
 "
+}
+
+motd
