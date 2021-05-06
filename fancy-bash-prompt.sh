@@ -59,7 +59,14 @@ fancy_bash_prompt()
 getGitBranch()
 {
 	if ( which git > /dev/null 2>&1 ); then
-		git branch 2> /dev/null | sed -n '/^[^*]/d;s/*\s*\(.*\)/\1/p'
+		branch="$(git branch 2> /dev/null | sed -n '/^[^*]/d;s/*\s*\(.*\)/\1/p')"
+		if [ ! -z "$branch" ]; then
+			vArrow="\uE0A0"
+			hArrow="\u2387"
+			echo -e "$hArrow $branch"
+			else
+			echo ""
+		fi
 	else
 		echo ""
 	fi
